@@ -9,7 +9,6 @@ export declare class Teacher {
     religion: string;
     email: string;
     phone: string;
-    class: string;
     address: string;
     admissionDate: Date;
     subjects: Subject[];

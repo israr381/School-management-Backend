@@ -32,19 +32,18 @@ let AdminService = class AdminService {
                 password: await bcrypt.hash(registerDto.password, 10),
             });
             if (!user) {
-                throw new common_1.HttpException('user not found', common_1.HttpStatus.BAD_REQUEST);
+                throw new common_1.HttpException('User not found', common_1.HttpStatus.BAD_REQUEST);
             }
             const payload = {
                 id: user.id,
             };
             const access_token = await this.jwtService.signAsync(payload);
-            console.log(user);
             return {
-                message: 'user register successfully',
+                message: 'User registered successfully',
                 result: {
                     user,
                     access_token,
-                }
+                },
             };
         }
         catch (error) {
@@ -54,36 +53,88 @@ let AdminService = class AdminService {
     async login(loginDto) {
         try {
             const user = await this.adminRepository.findOne({
-                where: { email: loginDto.email }
+                where: { email: loginDto.email },
             });
-            console.log(user);
             if (!user) {
-                throw new common_1.HttpException('user not found', common_1.HttpStatus.BAD_REQUEST);
+                throw new common_1.HttpException('User not found', common_1.HttpStatus.BAD_REQUEST);
             }
             const compare = await bcrypt.compare(loginDto.password, user.password);
-            if (compare) {
-                const payload = {
-                    id: user.id
-                };
-                if (!compare) {
-                    throw new common_1.HttpException('password is incorrect', common_1.HttpStatus.BAD_REQUEST);
-                }
-                const access_token = await this.jwtService.signAsync(payload);
-                return {
-                    Message: "Admin Login Successfully",
-                    result: {
-                        user,
-                        access_token
-                    }
-                };
+            if (!compare) {
+                throw new common_1.HttpException('Password is incorrect', common_1.HttpStatus.BAD_REQUEST);
             }
-            else {
-                throw new common_1.HttpException('incorrecct credential', common_1.HttpStatus.BAD_REQUEST);
-            }
+            const payload = {
+                id: user.id,
+            };
+            const access_token = await this.jwtService.signAsync(payload);
+            return {
+                Message: 'Admin Login Successfully',
+                result: {
+                    user,
+                    access_token,
+                },
+            };
         }
         catch (error) {
-            throw new common_1.HttpException(error.message, error.STATUS_CODES);
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    async logout() {
+        return { message: 'Logged out successfully' };
+    }
+    async findAll() {
+        return this.adminRepository.find();
+    }
+    async delete(id) {
+        const user = await this.adminRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new common_1.HttpException('User not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        await this.adminRepository.remove(user);
+        return { message: 'User deleted successfully' };
+    }
+    generateRandomId() {
+        return Math.random().toString(36).substring(2, 10);
+    }
+    async googleLogin(req) {
+        try {
+            const { id, name, email, photo } = req;
+            if (!email) {
+                throw new Error('Email is required');
+            }
+            let user = await this.adminRepository.findOne({ where: { email } });
+            if (!user) {
+                user = this.adminRepository.create({
+                    id,
+                    name,
+                    email,
+                    photo,
+                });
+                await this.adminRepository.save(user);
+            }
+            const payload = { id: user.id };
+            const access_token = await this.jwtService.signAsync(payload);
+            return {
+                message: 'User login successful',
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    photo: user.photo,
+                },
+                access_token,
+            };
+        }
+        catch (error) {
+            console.error('Google login error:', error.message);
+            throw new Error('Google login failed: ' + error.message);
+        }
+    }
+    async findById(id) {
+        const user = await this.adminRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new common_1.HttpException('User not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 };
 exports.AdminService = AdminService;

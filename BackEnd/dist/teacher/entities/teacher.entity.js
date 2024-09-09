@@ -54,10 +54,6 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Teacher.prototype, "class", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
 ], Teacher.prototype, "address", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

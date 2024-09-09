@@ -25,4 +25,23 @@ export declare class AdminService {
             access_token: string;
         };
     }>;
+    logout(): Promise<{
+        message: string;
+    }>;
+    findAll(): Promise<Admin[]>;
+    delete(id: string): Promise<{
+        message: string;
+    }>;
+    generateRandomId(): string;
+    googleLogin(req: any): Promise<{
+        message: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            photo: string;
+        };
+        access_token: string;
+    }>;
+    findById(id: string): Promise<Admin>;
 }

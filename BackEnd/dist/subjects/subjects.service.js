@@ -35,6 +35,9 @@ let SubjectsService = class SubjectsService {
     async remove(id) {
         await this.SubjectRepository.delete(id);
     }
+    async findAll() {
+        return this.SubjectRepository.find({ relations: ['teacher'] });
+    }
 };
 exports.SubjectsService = SubjectsService;
 exports.SubjectsService = SubjectsService = __decorate([

@@ -33,9 +33,7 @@ export class CreateTeacherDto {
   @IsNotEmpty()
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
-  class: string;
+  
 
   @IsString()
   @IsNotEmpty()

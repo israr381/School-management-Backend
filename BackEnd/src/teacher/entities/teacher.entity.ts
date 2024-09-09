@@ -30,8 +30,7 @@ export class Teacher {
   @Column()
   phone: string;
 
-  @Column()
-  class: string;
+  
 
   @Column()
   address: string;

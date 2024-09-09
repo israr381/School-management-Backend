@@ -33,4 +33,9 @@ export class SubjectsService {
     await this.SubjectRepository.delete(id);
   }
   
+
+  async findAll(): Promise<Subject[]> {
+    return this.SubjectRepository.find({ relations: ['teacher'] });
+  }
+
 }

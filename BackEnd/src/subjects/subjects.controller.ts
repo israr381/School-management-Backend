@@ -16,5 +16,10 @@ export class SubjectsController {
     return this.subjectsService.remove(+id);
   }
 
+  @Get('/find-all')
+  findAll() {
+    return this.subjectsService.findAll();
+  }
+
 
 }

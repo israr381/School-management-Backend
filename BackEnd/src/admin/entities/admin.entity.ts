@@ -1,19 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Admin {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;  
 
   @Column()
   name: string;
 
-
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
+
+  @Column({ nullable: true }) 
+  photo: string;
 
  
 }

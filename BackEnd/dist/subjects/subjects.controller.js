@@ -26,6 +26,9 @@ let SubjectsController = class SubjectsController {
     remove(id) {
         return this.subjectsService.remove(+id);
     }
+    findAll() {
+        return this.subjectsService.findAll();
+    }
 };
 exports.SubjectsController = SubjectsController;
 __decorate([
@@ -42,6 +45,12 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SubjectsController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)('/find-all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SubjectsController.prototype, "findAll", null);
 exports.SubjectsController = SubjectsController = __decorate([
     (0, common_1.Controller)('subjects'),
     __metadata("design:paramtypes", [subjects_service_1.SubjectsService])

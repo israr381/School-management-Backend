@@ -17,15 +17,43 @@ const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
 const Register_dto_1 = require("./dto/Register.dto");
 const Login_dto_1 = require("./dto/Login.dto");
+const passport_1 = require("@nestjs/passport");
 let AdminController = class AdminController {
-    constructor(adminservice) {
-        this.adminservice = adminservice;
+    constructor(adminService) {
+        this.adminService = adminService;
     }
     async login(loginDto) {
-        return this.adminservice.login(loginDto);
+        return this.adminService.login(loginDto);
     }
     async register(registerDto) {
-        return this.adminservice.register(registerDto);
+        return this.adminService.register(registerDto);
+    }
+    async findAll() {
+        return this.adminService.findAll();
+    }
+    async logout() {
+        return this.adminService.logout();
+    }
+    async googleAuth(req) { }
+    async delete(id) {
+        return this.adminService.delete(id);
+    }
+    async googleLogin(userProfile, res) {
+        try {
+            const user = await this.adminService.googleLogin(userProfile);
+            if (user && user.access_token) {
+                return res.status(200).json(user);
+            }
+            else {
+                return res.status(401).json({ message: 'Google login failed' });
+            }
+        }
+        catch (error) {
+            return res.status(500).json({ message: 'Server error', error });
+        }
+    }
+    async findById(id) {
+        return this.adminService.findById(id);
     }
 };
 exports.AdminController = AdminController;
@@ -43,6 +71,48 @@ __decorate([
     __metadata("design:paramtypes", [Register_dto_1.RegisterDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "register", null);
+__decorate([
+    (0, common_1.Get)('/all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Post)('/logout'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "logout", null);
+__decorate([
+    (0, common_1.Get)(),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "googleAuth", null);
+__decorate([
+    (0, common_1.Delete)('delete/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Post)('auth/google/callback'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "googleLogin", null);
+__decorate([
+    (0, common_1.Get)('find/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "findById", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])

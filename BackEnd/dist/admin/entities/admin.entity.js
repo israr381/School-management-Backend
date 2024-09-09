@@ -16,7 +16,7 @@ let Admin = class Admin {
 exports.Admin = Admin;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Admin.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -27,9 +27,13 @@ __decorate([
     __metadata("design:type", String)
 ], Admin.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Admin.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Admin.prototype, "photo", void 0);
 exports.Admin = Admin = __decorate([
     (0, typeorm_1.Entity)()
 ], Admin);

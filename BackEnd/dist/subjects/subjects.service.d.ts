@@ -8,4 +8,5 @@ export declare class SubjectsService {
     constructor(SubjectRepository: Repository<Subject>, teacherRepository: Repository<Teacher>);
     create(createSubjectDto: CreateSubjectDto): Promise<Subject>;
     remove(id: number): Promise<void>;
+    findAll(): Promise<Subject[]>;
 }

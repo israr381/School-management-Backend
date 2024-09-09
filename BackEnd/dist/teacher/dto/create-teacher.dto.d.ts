@@ -7,7 +7,6 @@ export declare class CreateTeacherDto {
     religion: string;
     email: string;
     phone: string;
-    class: string;
     address: string;
     admissionDate: Date;
 }

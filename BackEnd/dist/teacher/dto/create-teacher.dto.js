@@ -58,11 +58,6 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateTeacherDto.prototype, "class", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
 ], CreateTeacherDto.prototype, "address", void 0);
 __decorate([
     (0, class_validator_1.IsDate)(),

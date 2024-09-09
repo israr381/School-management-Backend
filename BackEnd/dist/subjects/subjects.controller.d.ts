@@ -5,4 +5,5 @@ export declare class SubjectsController {
     constructor(subjectsService: SubjectsService);
     create(createSubjectDto: CreateSubjectDto): Promise<import("./entities/subject.entity").Subject>;
     remove(id: string): Promise<void>;
+    findAll(): Promise<import("./entities/subject.entity").Subject[]>;
 }
