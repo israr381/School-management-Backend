@@ -1,16 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { DatabasModule } from './Database.mudule';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import * as cookieParser from 'cookie-parser';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as express from 'express';
+import * as serverless from 'serverless-http';
 
 async function bootstrap() {
-  const app = await NestFactory.create(DatabasModule);
-  app.use(cookieParser())
-  app.enableCors({origin: 'http://localhost:3000',  
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',  
-    allowedHeaders: 'Content-Type, Accept', 
-    credentials : true 
+  const expressApp = express();
+  const app = await NestFactory.create(DatabasModule, new ExpressAdapter(expressApp));
+  app.enableCors({
+    origin: ['http://localhost:3001', 'https://school-management-backend-livid.vercel.app'],
+    credentials: true,
   });
-  await app.listen(5000);
+  await app.init();
+
+  return serverless(expressApp);
 }
-bootstrap();
+
+export const handler = bootstrap();

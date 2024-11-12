@@ -55,6 +55,9 @@ let AdminService = class AdminService {
             const user = await this.adminRepository.findOne({
                 where: { email: loginDto.email },
             });
+            if (!loginDto.email || !loginDto.password) {
+                throw new common_1.HttpException('Email and password are required', common_1.HttpStatus.BAD_REQUEST);
+            }
             if (!user) {
                 throw new common_1.HttpException('User not found', common_1.HttpStatus.BAD_REQUEST);
             }
@@ -62,10 +65,17 @@ let AdminService = class AdminService {
             if (!compare) {
                 throw new common_1.HttpException('Password is incorrect', common_1.HttpStatus.BAD_REQUEST);
             }
-            const payload = {
-                id: user.id,
-            };
-            const access_token = await this.jwtService.signAsync(payload);
+            const payload = { id: user.id };
+            const access_token = await this.jwtService.signAsync(payload, {
+                expiresIn: '15d'
+            });
+            const refresh_token = await this.jwtService.signAsync(payload, {
+                expiresIn: '30d',
+            });
+            await this.adminRepository.update(user.id, { refreshToken: refresh_token });
+            const updatedUser = await this.adminRepository.findOne({
+                where: { id: user.id },
+            });
             return {
                 Message: 'Admin Login Successfully',
                 result: {

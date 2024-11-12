@@ -45,29 +45,43 @@ export class AdminService {
       throw new HttpException(error.message, error.STATUS_CODES);
     }
   }
-
   async login(loginDto: LoginDto) {
     try {
       const user = await this.adminRepository.findOne({
         where: { email: loginDto.email },
       });
 
+
+
+      if (!loginDto.email || !loginDto.password) {
+        throw new HttpException('Email and password are required', HttpStatus.BAD_REQUEST);
+      }
+  
       if (!user) {
         throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
       }
-
+  
       const compare = await bcrypt.compare(loginDto.password, user.password);
-
+  
       if (!compare) {
         throw new HttpException('Password is incorrect', HttpStatus.BAD_REQUEST);
       }
-
-      const payload = {
-        id: user.id,
-      };
-
-      const access_token = await this.jwtService.signAsync(payload);
-
+  
+      const payload = { id: user.id };
+  
+      const access_token = await this.jwtService.signAsync(payload, {
+        expiresIn : '15d'
+      });
+      const refresh_token = await this.jwtService.signAsync(payload, {
+        expiresIn: '30d',
+      });
+  
+      await this.adminRepository.update(user.id, { refreshToken: refresh_token });
+  
+      const updatedUser = await this.adminRepository.findOne({
+        where: { id: user.id },
+      });
+  
       return {
         Message: 'Admin Login Successfully',
         result: {
@@ -79,7 +93,8 @@ export class AdminService {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+  
+  
   async logout() {
     return { message: 'Logged out successfully' };
   }

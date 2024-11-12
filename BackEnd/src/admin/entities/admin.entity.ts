@@ -17,5 +17,9 @@ export class Admin {
   @Column({ nullable: true }) 
   photo: string;
 
+
+  @Column({ nullable: true })
+  refreshToken?: string; 
+
  
 }
